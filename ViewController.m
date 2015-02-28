@@ -77,7 +77,7 @@ NSMutableArray *g_pNaluBuff;
     // this is not the most beautiful animation...
     AVCaptureVideoPreviewLayer* preview = [[CameraServer server] getPreviewLayer];
     preview.frame = self.cameraView.bounds;
-    [[preview connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+    [[preview connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
 }
 
 - (void) startPreview
@@ -85,7 +85,7 @@ NSMutableArray *g_pNaluBuff;
     AVCaptureVideoPreviewLayer* preview = [[CameraServer server] getPreviewLayer];
     [preview removeFromSuperlayer];
     preview.frame = self.cameraView.bounds;
-    [[preview connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+    [[preview connection] setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
     
     [self.cameraView.layer addSublayer:preview];
     
