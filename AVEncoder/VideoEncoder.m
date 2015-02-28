@@ -32,9 +32,11 @@
                               AVVideoCodecH264, AVVideoCodecKey,
                               [NSNumber numberWithInt: width], AVVideoWidthKey,
                               [NSNumber numberWithInt:height], AVVideoHeightKey,
-                              //[NSDictionary dictionaryWithObjectsAndKeys:
-                              //      @YES, AVVideoAllowFrameReorderingKey, nil],
-                              @{AVVideoProfileLevelKey:AVVideoProfileLevelH264Baseline30},
+                              [NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSNumber numberWithInteger:200000], AVVideoAverageBitRateKey,
+                              [NSNumber numberWithInteger:15],AVVideoMaxKeyFrameIntervalKey,
+                              AVVideoProfileLevelH264Baseline30,AVVideoProfileLevelKey,
+                               nil],
                               AVVideoCompressionPropertiesKey,
                               nil];
     _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:settings];

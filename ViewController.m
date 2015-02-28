@@ -10,6 +10,8 @@
 #import "RtmpClient.h"
 #import "CameraServer.h"
 
+NSMutableArray *g_pNaluBuff;
+
 @interface ViewController ()
 
 @end
@@ -35,6 +37,38 @@
     [videoCamera start];
     isCapturing = TRUE;*/
     [self startPreview];
+    
+    g_pNaluBuff = [NSMutableArray arrayWithCapacity:100];
+    
+    NSThread *thread = [[NSThread alloc]initWithTarget:self selector:@selector(sendRTMPPacket) object:nil];
+    [thread start];
+    
+}
+
+- (void)sendRTMPPacket
+{
+    int i = 0;
+    int nNalus = 0;
+    char* pSource = NULL;
+    int nSourceLen = 0;
+    NSData *pNalu = NULL;
+    
+    while(true)
+    {
+        nNalus = (int)[g_pNaluBuff count];
+        for( i = 0; i < nNalus; i++ )
+        {
+            pNalu = [g_pNaluBuff objectAtIndex:i];
+            pSource = (char*)[pNalu bytes];
+            nSourceLen = (int)[pNalu length];
+            RTMPClientSendPacket(pSource, nSourceLen);
+        }
+        @synchronized(g_pNaluBuff)
+        {
+            [g_pNaluBuff removeAllObjects];
+        }
+        sleep(1);
+    }
     
 }
 

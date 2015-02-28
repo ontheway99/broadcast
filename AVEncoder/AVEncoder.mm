@@ -8,13 +8,14 @@
 
 #import "AVEncoder.h"
 #import "NALUnit.h"
+#import "AssetsLibrary/AssetsLibrary.h"
 
 static unsigned int to_host(unsigned char* p)
 {
     return (p[0] << 24) + (p[1] << 16) + (p[2] << 8) + p[3];
 }
 
-#define OUTPUT_FILE_SWITCH_POINT (50 * 1024 * 1024)  // 50 MB switch point
+#define OUTPUT_FILE_SWITCH_POINT (1 * 1024 * 1024)  // 50 MB switch point
 #define MAX_FILENAME_INDEX  5                       // filenames "capture1.mp4" wraps at capture5.mp4
 
 // store the calculated POC with a frame ready for timestamp assessment
@@ -116,6 +117,9 @@ static unsigned int to_host(unsigned char* p)
 {
     NSString* filename = [NSString stringWithFormat:@"capture%d.mp4", _currentFile];
     NSString* path = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+    NSLog(@"make file name is %@", path);
+    //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //NSString* path = [[paths objectAtIndex:0]stringByAppendingPathComponent:filename];
     return path;
 }
 - (void) initForHeight:(int)height andWidth:(int)width
@@ -331,8 +335,24 @@ static unsigned int to_host(unsigned char* p)
     [_inputFile closeFile];
     _foundMDAT = false;
     _bytesToNextAtom = 0;
-    [[NSFileManager defaultManager] removeItemAtPath:oldPath error:nil];
     
+//Recording file to local
+/*    NSLog(@"swapFiles old path is %@", oldPath);
+    NSURL *outputURL = [[NSURL alloc] initFileURLWithPath:oldPath];
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputURL])
+    {
+        [library writeVideoAtPathToSavedPhotosAlbum:outputURL
+                                    completionBlock:^(NSURL *assetURL, NSError *error)
+         {
+             if (error)
+             {
+                 
+             }
+         }];
+    }*/
+//
+   [[NSFileManager defaultManager] removeItemAtPath:oldPath error:nil];
     
     // open new file and set up dispatch source
     _inputFile = [NSFileHandle fileHandleForReadingAtPath:_writer.path];
@@ -461,6 +481,7 @@ static unsigned int to_host(unsigned char* p)
             }
         }
         [self deliverFrame:f.frame withTime:pts];
+  //      NSLog(@"Process stored frames, pts = %@",  [NSNumber numberWithDouble:pts]);
         n++;
     }
     @synchronized(_times)
@@ -495,6 +516,7 @@ static unsigned int to_host(unsigned char* p)
                 [_times removeObjectAtIndex:index];
             }
         }
+       // NSLog(@"Pending NALU deliver frame with pts = %@", [NSNumber numberWithDouble:pts]);
         [self deliverFrame:_pendingNALU withTime:pts];
         _prevPOC = 0;
     }
@@ -505,6 +527,7 @@ static unsigned int to_host(unsigned char* p)
         {
             // all pending frames come before this, so share out the
             // timestamps in order of POC
+          //  NSLog(@"POC>prevPOC, Process stored frames, NALU count =%lu", [_pendingNALU count]);
             [self processStoredFrames];
             _prevPOC = poc;
         }

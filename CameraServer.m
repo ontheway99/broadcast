@@ -10,7 +10,6 @@
 #import "AVEncoder.h"
 #import "RtmpClient.h"
 
-
 static CameraServer* theServer;
 
 @interface CameraServer  () <AVCaptureVideoDataOutputSampleBufferDelegate>
@@ -22,6 +21,7 @@ static CameraServer* theServer;
     
     AVEncoder* _encoder;
     double _basePTS;
+    double _prevPTS;
     
 //    RTSPServer* _rtsp;
 }
@@ -56,7 +56,7 @@ static CameraServer* theServer;
         _session = [[AVCaptureSession alloc] init];
         AVCaptureDevice* dev = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
         AVCaptureDeviceInput* input = [AVCaptureDeviceInput deviceInputWithDevice:dev error:nil];
-        [_session setSessionPreset:AVCaptureSessionPreset352x288];
+        [_session setSessionPreset:AVCaptureSessionPreset640x480];
         [_session addInput:input];
         
         // create an output for YUV output with self as delegate
@@ -85,8 +85,8 @@ static CameraServer* theServer;
         
         if(!error)
         {
-            dev.activeVideoMinFrameDuration = CMTimeMake(1, 15);
-            dev.activeVideoMaxFrameDuration = CMTimeMake(1, 15);
+            dev.activeVideoMinFrameDuration = CMTimeMake(1, 30);
+            dev.activeVideoMaxFrameDuration = CMTimeMake(1, 30);
             
             [dev unlockForConfiguration];
         }
@@ -98,7 +98,7 @@ static CameraServer* theServer;
         g_bFirst = true;
         
         // create an encoder
-        _encoder = [AVEncoder encoderForHeight:288 andWidth:352];
+        _encoder = [AVEncoder encoderForHeight:240 andWidth:320];
         [_encoder encodeWithBlock:^int(NSArray* data, double pts) {
        //     if (_rtsp != nil)
        //     {
@@ -162,48 +162,51 @@ static CameraServer* theServer;
 {
     int i = 0;
     int nNalus = 0;
-    unsigned char* pSource = NULL;
-    int pSourceLen = 0;
+    char* pSource = NULL;
+    int nSourceLen = 0;
     NSData *pNalu = NULL;
     NSData *pAVCSeqData = NULL;
-    unsigned int tmpPTS = 0;
+    unsigned int deltaPTS = 0;
     
     if( !g_bConnect )
     {
         return;
     }
+    
     nNalus = (int)[data count];
     for( i = 0; i < nNalus; i++ )
     {
         pNalu = [data objectAtIndex:i];
-        pSource = (unsigned char*)[pNalu bytes];
-        pSourceLen = (int)[pNalu length];
+        pSource = (char*)[pNalu bytes];
+        nSourceLen = (int)[pNalu length];
         if( g_bFirst )
         {
-            if((pSource[0] & 0x1f) != 5)
+            if((pSource[0] & 0x1f) == 5)
             {
-                continue;
+                pAVCSeqData = [_encoder getConfigData];
+                if( pAVCSeqData )
+                {
+                    RTMPClientSendAVCSeqHeader((char*)[pAVCSeqData bytes],(int)[pAVCSeqData length], 0);
+                    RTMPClientSendAVCNalu((char *)pSource, nSourceLen, true, 0);
+                    _basePTS = pts;
+                    g_bFirst = false;
+                }
             }
-            
-            pAVCSeqData = [_encoder getConfigData];
-            if( pAVCSeqData == NULL )
-            {
-                continue;
-            }
-            _basePTS = pts;
-            RTMPClientSendAVCSeqHeader((char*)[pAVCSeqData bytes],(int)[pAVCSeqData length],0);
-            g_bFirst = false;
-        }
-        tmpPTS = (unsigned int)((pts-_basePTS)*1000);
-        //NSLog(@"PTS is equal to %d\n", tmpPTS);
-        if((pSource[0] & 0x1f) != 5)
-        {
-            RTMPClientSendAVCNalu((char *)pSource, pSourceLen, false, tmpPTS);
         }
         else
         {
-            RTMPClientSendAVCNalu((char *)pSource, pSourceLen, true, tmpPTS);
+            //deltaPTS = (unsigned int)((pts-_prevPTS)*1000);
+            deltaPTS = (unsigned int)((pts-_basePTS)*1000);
+            if((pSource[0] & 0x1f) != 5)
+            {
+                RTMPClientSendAVCNalu((char *)pSource, nSourceLen, false, deltaPTS);
+            }
+            else
+            {
+                RTMPClientSendAVCNalu((char *)pSource, nSourceLen, true, deltaPTS);
+            }
         }
+        _prevPTS = pts;
     }
 }
 
