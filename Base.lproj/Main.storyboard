@@ -14,18 +14,18 @@
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cUT-bp-5Tf">
-                                <rect key="frame" x="522" y="178" width="46" height="30"/>
+                                <rect key="frame" x="599" y="212" width="46" height="30"/>
                                 <state key="normal" title="灯光">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="27g-6Q-KlG">
-                                <rect key="frame" x="522" y="247" width="46" height="30"/>
+                                <rect key="frame" x="599" y="300" width="46" height="30"/>
                                 <state key="normal" title="开始">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -35,14 +35,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TID-dq-ZdK">
-                                <rect key="frame" x="522" y="113" width="46" height="30"/>
+                                <rect key="frame" x="599" y="126" width="46" height="30"/>
                                 <state key="normal" title="话筒">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5jw-gV-f4O">
-                                <rect key="frame" x="522" y="43" width="46" height="30"/>
+                                <rect key="frame" x="599" y="39" width="46" height="30"/>
                                 <state key="normal" title="设置">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -51,8 +51,11 @@
                                     <segue destination="mPU-0O-eHy" kind="presentation" modalPresentationStyle="pageSheet" id="Ay1-Mn-aKc"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LpR-7w-dkd">
-                                <rect key="frame" x="0.0" y="0.0" width="519" height="320"/>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" placeholderIntrinsicWidth="56" placeholderIntrinsicHeight="15" translatesAutoresizingMaskIntoConstraints="NO" id="LpR-7w-dkd">
+                                <rect key="frame" x="0.0" y="-3" width="591" height="382"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -62,14 +65,14 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="cameraView" destination="LpR-7w-dkd" id="g2W-dw-4uB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="460" y="322"/>
+            <point key="canvasLocation" x="464.5" y="336.5"/>
         </scene>
         <!--Config View Controller-->
         <scene sceneID="h1R-M5-fs4">
@@ -80,7 +83,7 @@
                         <viewControllerLayoutGuide type="bottom" id="UDW-N9-Lk3"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="0IS-Dy-y90">
-                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zZh-IF-j2a">
@@ -143,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ik2-Ol-5JG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1105" y="321"/>
+            <point key="canvasLocation" x="1329.5" y="301.5"/>
         </scene>
     </scenes>
 </document>
